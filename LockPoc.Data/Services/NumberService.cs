@@ -13,6 +13,9 @@ namespace LockPoc.Data.Services
         }
 
         public async Task<ulong> GetNewSaleDocumentNumberAsync()
-            => await _numberRepository.GetNewNumber("SALEDOCUMENT");
+            => await _numberRepository.GetNewNumber(Constants.SalesDocument);
+        
+        public async Task<ulong> GetNewInvoiceNumberAsync()
+            => await _numberRepository.GetNewNumber(Constants.Invoice);
     }
 }

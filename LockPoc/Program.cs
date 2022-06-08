@@ -25,7 +25,7 @@ namespace LockPOC
             using (var scope = _serviceProvider.CreateAsyncScope())
             {
                 await UpdateDatabase(scope.ServiceProvider);
-                GetNumbers().GetAwaiter().GetResult();
+                await GetNumbers();
             }
         }
 
@@ -35,12 +35,13 @@ namespace LockPOC
             var appSettings = _serviceProvider.GetRequiredService<IConfigurationProvider>();
             var numberService = _serviceProvider.GetRequiredService<INumberService>();
             var numberOfThreads = appSettings.GetValue<int>("NumberOfThreads");
-            var tasks = Enumerable.Range(0, numberOfThreads)
-                .Select(i => Task.Delay(random.Next(0, 500)).ContinueWith(t => numberService.GetNewSaleDocumentNumberAsync(), TaskContinuationOptions.LongRunning));
-
-            var taskResults = await Task.WhenAll(tasks);
             
-            Debug.Assert(taskResults.Select(tr => tr.Result).Distinct().Count() == numberOfThreads);
+            var salesDocumentTasks = Enumerable.Range(0, numberOfThreads)
+                .Select(i => Task.Delay(random.Next(0, 500)).ContinueWith(t => numberService.GetNewSaleDocumentNumberAsync(), TaskContinuationOptions.LongRunning));
+            
+            var salesDocumentTaskResults = await Task.WhenAll(salesDocumentTasks);
+            
+            Debug.Assert(salesDocumentTaskResults.Select(tr => tr.Result).Distinct().Count() == numberOfThreads);
         }
         
         private static IServiceProvider CreateServices()

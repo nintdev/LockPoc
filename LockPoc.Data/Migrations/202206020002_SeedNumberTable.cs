@@ -27,7 +27,7 @@ namespace LockPoc.Data.Migrations
                 .Row(new Number
                 {
                     Id = 1,
-                    Type = "SALESDOCUMENT",
+                    Type = Constants.SalesDocument,
                     LastIssuedNumber = _configurationProvider.GetValue<ulong>("SalesdocumentLastIssuedId"),
                     LastIssuedUserId = 0
                 });
@@ -37,7 +37,7 @@ namespace LockPoc.Data.Migrations
                 .Row(new Number
                 {
                     Id = 2,
-                    Type = "INVOICE",
+                    Type = Constants.Invoice,
                     LastIssuedNumber = _configurationProvider.GetValue<ulong>("InvoiceLastIssuedId"),
                     LastIssuedUserId = 0
                 });

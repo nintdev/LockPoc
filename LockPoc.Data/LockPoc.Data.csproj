@@ -32,6 +32,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Constants.cs" />
         <Compile Include="Context\DapperContext.cs" />
         <Compile Include="Context\IContext.cs" />
         <Compile Include="Core\IConfigurationProvider.cs" />

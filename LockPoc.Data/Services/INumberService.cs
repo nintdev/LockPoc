@@ -5,5 +5,7 @@ namespace LockPoc.Data.Services
     public interface INumberService
     {
         Task<ulong> GetNewSaleDocumentNumberAsync();
+
+        Task<ulong> GetNewInvoiceNumberAsync();
     }
 }
