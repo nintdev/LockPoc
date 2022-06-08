@@ -1,10 +1,10 @@
 ﻿using System.Data;
+using System.Threading.Tasks;
 
 namespace LockPoc.Data.Context
 {
     public interface IContext
     {
-        IDbConnection CreateConnection();
-        IDbConnection CreateMasterConnection();
+        Task<IDbConnection> CreateConnectionAsync(string connectionName, bool returnOpened = true);
     }
 }

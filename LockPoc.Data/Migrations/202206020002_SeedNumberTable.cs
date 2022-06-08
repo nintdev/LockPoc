@@ -23,24 +23,22 @@ namespace LockPoc.Data.Migrations
         public override void Up()
         {
             Insert.IntoTable(_tableName).InSchema(_databaseSchema)
-                .WithIdentityInsert()
                 .Row(new Number
                 {
                     Id = 1,
-                    Type = Constants.SalesDocument,
-                    LastIssuedNumber = _configurationProvider.GetValue<ulong>("SalesdocumentLastIssuedId"),
-                    LastIssuedUserId = 0
-                });
-            
+                    Type = Constants.DocumentTypes.SalesDocument,
+                    LastIssuedTimestamp = DateTime.Now
+                })
+                .WithIdentityInsert();
+
             Insert.IntoTable(_tableName).InSchema(_databaseSchema)
-                .WithIdentityInsert()
                 .Row(new Number
                 {
                     Id = 2,
-                    Type = Constants.Invoice,
-                    LastIssuedNumber = _configurationProvider.GetValue<ulong>("InvoiceLastIssuedId"),
-                    LastIssuedUserId = 0
-                });
+                    Type = Constants.DocumentTypes.Invoice,
+                    LastIssuedTimestamp = DateTime.Now
+                })
+                .WithIdentityInsert();
         }
     }
 }

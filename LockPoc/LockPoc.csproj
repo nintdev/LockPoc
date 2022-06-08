@@ -34,6 +34,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Core\AppSettingsConfigurationProvider.cs" />
+        <Compile Include="Data\VersionInfo.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

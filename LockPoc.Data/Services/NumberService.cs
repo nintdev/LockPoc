@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using LockPoc.Data.Repositories;
 
 namespace LockPoc.Data.Services
@@ -12,10 +13,10 @@ namespace LockPoc.Data.Services
             _numberRepository = numberRepository;
         }
 
-        public async Task<ulong> GetNewSaleDocumentNumberAsync()
-            => await _numberRepository.GetNewNumber(Constants.SalesDocument);
+        public async Task<ulong> GetNewSaleDocumentNumberAsync(int userId = 0)
+            => await _numberRepository.CreateNewNumber(Constants.DocumentTypes.SalesDocument, userId);
         
-        public async Task<ulong> GetNewInvoiceNumberAsync()
-            => await _numberRepository.GetNewNumber(Constants.Invoice);
+        public async Task<ulong> GetNewInvoiceNumberAsync(int userId = 0)
+            => await _numberRepository.CreateNewNumber(Constants.DocumentTypes.Invoice, userId);
     }
 }

@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace LockPoc.Data.Services
 {
     public interface INumberService
     {
-        Task<ulong> GetNewSaleDocumentNumberAsync();
+        Task<ulong> GetNewSaleDocumentNumberAsync(int userId = 0);
 
-        Task<ulong> GetNewInvoiceNumberAsync();
+        Task<ulong> GetNewInvoiceNumberAsync(int userId = 0);
     }
 }

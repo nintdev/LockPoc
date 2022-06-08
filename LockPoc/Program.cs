@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentMigrator.Runner;
+using FluentMigrator.Runner.VersionTableInfo;
+using LockPoc;
 using LockPoc.Core;
 using LockPoc.Data;
 using LockPoc.Data.Context;
@@ -24,24 +28,26 @@ namespace LockPOC
 
             using (var scope = _serviceProvider.CreateAsyncScope())
             {
-                await UpdateDatabase(scope.ServiceProvider);
-                await GetNumbers();
+                await UpdateDatabase(scope);
+                await GetNumbers(scope); // todo: cancellation
             }
         }
 
-        private static async Task GetNumbers()
+        private static async Task GetNumbers(IServiceScope scope)
         {
             var random = new Random();
-            var appSettings = _serviceProvider.GetRequiredService<IConfigurationProvider>();
-            var numberService = _serviceProvider.GetRequiredService<INumberService>();
+            var appSettings = scope.ServiceProvider.GetRequiredService<IConfigurationProvider>();
+            var numberService = scope.ServiceProvider.GetRequiredService<INumberService>();
             var numberOfThreads = appSettings.GetValue<int>("NumberOfThreads");
+
+            var tasks = Enumerable.Range(0, numberOfThreads)
+                .Select(i =>
+                    Task.Delay(random.Next(0, 500)).ContinueWith(t => numberService.GetNewSaleDocumentNumberAsync(),
+                        TaskContinuationOptions.LongRunning));
+                    
+            var taskResults = await Task.WhenAll(tasks);
             
-            var salesDocumentTasks = Enumerable.Range(0, numberOfThreads)
-                .Select(i => Task.Delay(random.Next(0, 500)).ContinueWith(t => numberService.GetNewSaleDocumentNumberAsync(), TaskContinuationOptions.LongRunning));
-            
-            var salesDocumentTaskResults = await Task.WhenAll(salesDocumentTasks);
-            
-            Debug.Assert(salesDocumentTaskResults.Select(tr => tr.Result).Distinct().Count() == numberOfThreads);
+            Debug.Assert(taskResults.Select(tr => tr.Result).Distinct().Count() == numberOfThreads);
         }
         
         private static IServiceProvider CreateServices()
@@ -57,6 +63,7 @@ namespace LockPOC
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
+                    .WithVersionTable(new VersionInfo())
                     .WithGlobalConnectionString(ConfigurationManager.ConnectionStrings["Connection"].ConnectionString)
                     .ScanIn(typeof(Database).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
@@ -64,17 +71,17 @@ namespace LockPOC
                 .BuildServiceProvider(false);
         }
         
-        private static async Task UpdateDatabase(IServiceProvider serviceProvider)
+        private static async Task UpdateDatabase(IServiceScope scope)
         {
-            var database = _serviceProvider.GetRequiredService<IDatabase>();
-            var databaseName = _serviceProvider.GetRequiredService<IConfigurationProvider>().GetString("DatabaseName");
+            var database = scope.ServiceProvider.GetRequiredService<IDatabase>();
+            var databaseName = scope.ServiceProvider.GetRequiredService<IConfigurationProvider>().GetString("DatabaseName");
 
             //await database.DropDatabaseAsync(databaseName);
             
             await database.CreateDatabaseAsync(databaseName);
             
             // Instantiate the runner
-            var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
+            var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
             // Execute the migrations
             runner.ListMigrations();

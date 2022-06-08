@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace LockPoc.Data.Repositories
 {
     public interface INumberRepository
     {
-        Task<ulong> GetNewNumber(string type);
+        Task<ulong> CreateNewNumber(string type, int userId = 0);
+
+        Task<ulong> GetLastNumber(string type);
     }
 }

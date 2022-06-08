@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using LockPoc.Data.Core;
 
 namespace LockPoc.Data.Context
@@ -16,10 +17,14 @@ namespace LockPoc.Data.Context
             _configurationProvider = configurationProvider;
         }
 
-        public IDbConnection CreateConnection()
-            => new SqlConnection(GetConnectionString("Connection"));
-        
-        public IDbConnection CreateMasterConnection()
-            => new SqlConnection(GetConnectionString("MasterConnection"));
+        public async Task<IDbConnection> CreateConnectionAsync(string name, bool returnOpened = true)
+        {
+            var connection = new SqlConnection(GetConnectionString(name));
+
+            if (returnOpened && connection.State != ConnectionState.Open)
+                await connection.OpenAsync();
+
+            return connection;
+        }
     }
 }

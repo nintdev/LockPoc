@@ -16,7 +16,7 @@ namespace LockPoc.Data
 
         public async Task CreateDatabaseAsync(string databaseName)
         {
-            using (var connection = _context.CreateMasterConnection())
+            using (var connection = await _context.CreateConnectionAsync(Constants.ConnectionNames.MasterConnection))
             {
                 var records = await connection.QueryAsync($"SELECT * FROM sys.databases WHERE name = '{databaseName}'");
                 if (!records.Any())
@@ -26,7 +26,7 @@ namespace LockPoc.Data
 
         public async Task DropDatabaseAsync(string databaseName)
         {
-            using (var connection = _context.CreateMasterConnection())
+            using (var connection = await _context.CreateConnectionAsync(Constants.ConnectionNames.MasterConnection))
             {
                 var query = $@"
 IF EXISTS (SELECT 1 FROM sys.databases WHERE [name] = N'{databaseName}')

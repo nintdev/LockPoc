@@ -1,10 +1,12 @@
-﻿using FluentMigrator;
+﻿using System;
+using FluentMigrator;
+using FluentMigrator.SqlServer;
 using LockPoc.Data.Core;
 
 namespace LockPoc.Data.Migrations
 {
     [Migration(202206020001)]
-    public class CreateNumberTable: Migration
+    public class CreateNumberTable: AutoReversingMigration
     {
         private readonly IConfigurationProvider _configurationProvider;
         private readonly string _databaseSchema;
@@ -20,22 +22,13 @@ namespace LockPoc.Data.Migrations
         public override void Up()
         {
             Create.Schema(_databaseSchema);
-            
             Create.Table(_tableName).InSchema(_databaseSchema)
-                .WithColumn("Id").AsInt32().Identity()
+                .WithColumn("Id").AsInt32().Identity(1, 1).PrimaryKey()
                 .WithColumn("Type").AsFixedLengthString(64).NotNullable().Unique()
                 .WithColumn("LastIssuedNumber").AsInt64().NotNullable()
-                .WithColumn("LastIssuedTimestamp").AsCustom("rowversion").NotNullable()
-                .WithColumn("LastIssuedUserId").AsInt32().NotNullable();
-
-            Create.PrimaryKey($"PK_{_tableName}_Id_Type").OnTable(_tableName).WithSchema(_databaseSchema)
-                .Columns(new string[] { "Id", "Type" });
-        }
-
-        public override void Down()
-        {
-            Delete.Table(_tableName).InSchema(_databaseSchema);
-            Delete.Schema(_databaseSchema);
+                .WithColumn("LastIssuedTimestamp").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
+                .WithColumn("LastIssuedUserId").AsInt32().NotNullable()
+                .WithColumn("Version").AsCustom("rowversion").NotNullable();
         }
     }
 }
