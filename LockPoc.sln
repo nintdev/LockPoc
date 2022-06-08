@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockPoc", "LockPoc\LockPoc.csproj", "{9822866A-E692-4090-855E-04142545FAAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockPoc.Data", "LockPoc.Data\LockPoc.Data.csproj", "{B88209E3-C2B1-4011-BB3C-739FDC1A1399}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9822866A-E692-4090-855E-04142545FAAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9822866A-E692-4090-855E-04142545FAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9822866A-E692-4090-855E-04142545FAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9822866A-E692-4090-855E-04142545FAAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B88209E3-C2B1-4011-BB3C-739FDC1A1399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B88209E3-C2B1-4011-BB3C-739FDC1A1399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B88209E3-C2B1-4011-BB3C-739FDC1A1399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B88209E3-C2B1-4011-BB3C-739FDC1A1399}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
