@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using LockPoc.Data.Core;
@@ -14,7 +15,7 @@ namespace LockPoc.Data.Context
         
         public DapperContext(IConfigurationProvider configurationProvider)
         {
-            _configurationProvider = configurationProvider;
+            _configurationProvider = configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
         }
 
         public async Task<IDbConnection> CreateConnectionAsync(string name, bool returnOpened = true)

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LockPoc.Data.Repositories;
 
@@ -10,7 +11,7 @@ namespace LockPoc.Data.Services
 
         public NumberService(INumberRepository numberRepository)
         {
-            _numberRepository = numberRepository;
+            _numberRepository = numberRepository ?? throw new ArgumentNullException(nameof(numberRepository));
         }
 
         public async Task<ulong> GetNewSaleDocumentNumberAsync(int userId = 0)

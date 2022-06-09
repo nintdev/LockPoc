@@ -17,8 +17,8 @@ namespace LockPoc.Data.Repositories
 
         public NumberRepository(IContext context, IConfigurationProvider configurationProvider)
         {
-            _context = context;
-            _configurationProvider = configurationProvider;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _configurationProvider = configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
             _schemaName = _configurationProvider.GetString("DatabaseSchema");
             _tableName = _configurationProvider.GetString("TableName");
         }
